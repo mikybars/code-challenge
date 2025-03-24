@@ -18,8 +18,11 @@ repositories {
 }
 
 dependencies {
-	implementation("org.springframework.boot:spring-boot-starter")
+	implementation("org.springframework.boot:spring-boot-starter-web")
+	implementation("org.springframework.boot:spring-boot-starter-webflux")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	testImplementation("com.approvaltests:approvaltests:24.19.0")
+	testImplementation("com.google.code.gson:gson:2.12.1")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
