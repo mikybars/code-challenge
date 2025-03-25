@@ -4,6 +4,6 @@ import java.time.LocalDateTime;
 
 public record ProductPrice(ProductId productId, BrandId brandId, PriceListId priceListId,
                            LocalDateTime startDate, LocalDateTime endDate,
-                           Money price) {
+                           Priority priority, Money price) {
 
 }
