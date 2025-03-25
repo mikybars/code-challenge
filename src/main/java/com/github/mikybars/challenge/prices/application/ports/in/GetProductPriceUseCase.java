@@ -5,7 +5,7 @@ import com.github.mikybars.challenge.prices.domain.ProductId;
 import com.github.mikybars.challenge.prices.domain.ProductPrice;
 import java.time.LocalDateTime;
 
-public interface FindProductPriceUseCase {
+public interface GetProductPriceUseCase {
 
   ProductPrice execute(LocalDateTime applicationDate, ProductId productId, BrandId brandId);
 }
