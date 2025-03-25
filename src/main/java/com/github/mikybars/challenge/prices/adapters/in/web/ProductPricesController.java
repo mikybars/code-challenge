@@ -1,5 +1,9 @@
 package com.github.mikybars.challenge.prices.adapters.in.web;
 
+import com.github.mikybars.challenge.prices.application.ports.in.FindProductPriceUseCase;
+import com.github.mikybars.challenge.prices.domain.BrandId;
+import com.github.mikybars.challenge.prices.domain.ProductId;
+import java.time.LocalDateTime;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -7,19 +11,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 class ProductPricesController {
 
-  record Response(String productId, String brandId, String priceListId, String startDate,
-                  String endDate, String amount, String currencyCode) {
+  private final FindProductPriceUseCase findProductPriceUseCase;
+  private final ProductPriceRestMapper productPriceRestMapper;
 
+  ProductPricesController(FindProductPriceUseCase findProductPriceUseCase,
+      ProductPriceRestMapper productPriceRestMapper) {
+    this.findProductPriceUseCase = findProductPriceUseCase;
+    this.productPriceRestMapper = productPriceRestMapper;
   }
 
   @GetMapping("/prices")
-  ResponseEntity<Response> findPrice(String applicationDate, String productId, String brandId) {
-    if (productId.equals("35455")) {
-      return ResponseEntity.ok(
-          new Response("35455", "1", "1", "2020-06-14-00.00.00", "2020-12-31-23.59.59", "35.50",
-              "EUR"));
-    } else {
-      return ResponseEntity.notFound().build();
-    }
+  ResponseEntity<ProductPriceDto> findPrice(LocalDateTime applicationDate, String productId, String brandId) {
+    var productPrice = findProductPriceUseCase.execute(
+        applicationDate, new ProductId(productId), new BrandId(brandId));
+    var responseDto = productPriceRestMapper.toResponseDto(productPrice);
+    return ResponseEntity.ok(responseDto);
   }
 }
