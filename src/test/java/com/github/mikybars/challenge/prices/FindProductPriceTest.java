@@ -2,7 +2,9 @@ package com.github.mikybars.challenge.prices;
 
 import static org.mockito.Mockito.when;
 
+import com.github.mikybars.challenge.common.NotFoundException;
 import com.github.mikybars.challenge.prices.adapters.in.web.ProductPriceRestMapperImpl;
+import com.github.mikybars.challenge.prices.adapters.in.web.RestConfiguration;
 import com.github.mikybars.challenge.prices.application.ports.in.FindProductPriceUseCase;
 import com.github.mikybars.challenge.prices.domain.BrandId;
 import com.github.mikybars.challenge.prices.domain.Money;
@@ -23,7 +25,10 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.test.web.reactive.server.WebTestClient.ResponseSpec;
 
 @WebMvcTest
-@Import(ProductPriceRestMapperImpl.class)
+@Import({
+    ProductPriceRestMapperImpl.class,
+    RestConfiguration.class
+})
 class FindProductPriceTest {
 
   @Autowired
@@ -50,13 +55,16 @@ class FindProductPriceTest {
 
     response
         .expectStatus().isOk()
-        .expectBody(String.class)
-        .consumeWith(result ->
+        .expectBody(String.class).consumeWith(result ->
             JsonApprovals.verifyJson(result.getResponseBody()));
   }
 
   @Test
   void doesNotFindProductPrice() {
+    when(findProductPriceUseCase.execute(
+        sometime(), productNotFoundId(), someBrand())
+    ).thenThrow(new NotFoundException("no price found for input params"));
+
     ResponseSpec response = webClient.get()
         .uri(uriBuilder -> uriBuilder
             .path("/prices")
@@ -67,8 +75,10 @@ class FindProductPriceTest {
         .accept(MediaType.APPLICATION_JSON)
         .exchange();
 
-    // TODO: check for a problem details object in the response body
-    response.expectStatus().isNotFound();
+    response
+        .expectStatus().isNotFound()
+        .expectBody(String.class).consumeWith(result ->
+            JsonApprovals.verifyJson(result.getResponseBody()));
   }
 
   static ProductPrice productPriceFound() {

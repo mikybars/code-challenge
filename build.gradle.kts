@@ -21,6 +21,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
 	implementation("org.mapstruct:mapstruct:1.5.3.Final")
+	implementation("io.github.wimdeblauwe:error-handling-spring-boot-starter:4.5.0")
 	annotationProcessor("org.mapstruct:mapstruct-processor:1.5.3.Final")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("com.approvaltests:approvaltests:24.19.0")
