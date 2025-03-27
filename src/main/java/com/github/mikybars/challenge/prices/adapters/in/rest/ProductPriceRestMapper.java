@@ -5,7 +5,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 @Mapper
-public interface ProductPriceRestMapper {
+interface ProductPriceRestMapper {
 
   @Mapping(target = "productId", source = "productId.id")
   @Mapping(target = "brandId", source = "brandId.id")

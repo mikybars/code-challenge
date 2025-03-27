@@ -12,7 +12,7 @@ import lombok.Getter;
 @Entity
 @Table(name = "product_price")
 @Getter
-public class ProductPriceEntity {
+class ProductPriceEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)

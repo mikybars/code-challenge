@@ -8,7 +8,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 @Mapper
-public interface ProductPricePersistenceMapper {
+interface ProductPricePersistenceMapper {
 
   @Mapping(target = "price", source = "entity")
   ProductPrice toDomain(ProductPriceEntity entity);
