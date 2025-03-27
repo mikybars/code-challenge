@@ -4,7 +4,6 @@ import static org.mockito.Mockito.when;
 
 import com.github.mikybars.challenge.common.NotFoundException;
 import com.github.mikybars.challenge.prices.adapters.in.web.ProductPriceRestMapperImpl;
-import com.github.mikybars.challenge.prices.adapters.in.web.RestConfiguration;
 import com.github.mikybars.challenge.prices.application.ports.in.GetProductPriceUseCase;
 import com.github.mikybars.challenge.prices.domain.BrandId;
 import com.github.mikybars.challenge.prices.domain.ProductId;
@@ -20,10 +19,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.test.web.reactive.server.WebTestClient.ResponseSpec;
 
 @WebMvcTest
-@Import({
-    ProductPriceRestMapperImpl.class,
-    RestConfiguration.class
-})
+@Import(ProductPriceRestMapperImpl.class)
 class GetProductPriceTest {
 
   @Autowired

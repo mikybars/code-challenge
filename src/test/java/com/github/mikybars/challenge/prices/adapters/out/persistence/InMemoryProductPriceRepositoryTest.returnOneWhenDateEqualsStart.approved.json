@@ -1,0 +1,17 @@
+{
+  "productId": {
+    "id": "p1"
+  },
+  "brandId": {
+    "id": "b1"
+  },
+  "priceListId": {
+    "id": "pl1"
+  },
+  "startDate": "2023-01-01T00:00",
+  "endDate": "2023-12-31T23:59:59",
+  "price": {
+    "amount": 100.00,
+    "currency": "USD"
+  }
+}

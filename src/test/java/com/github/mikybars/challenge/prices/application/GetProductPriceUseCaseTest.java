@@ -1,6 +1,5 @@
 package com.github.mikybars.challenge.prices.application;
 
-import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.when;
@@ -8,12 +7,12 @@ import static org.mockito.Mockito.when;
 import com.github.mikybars.challenge.common.NotFoundException;
 import com.github.mikybars.challenge.prices.ProductPrices;
 import com.github.mikybars.challenge.prices.application.ports.in.GetProductPriceUseCase;
-import com.github.mikybars.challenge.prices.application.ports.out.PriceRepository;
+import com.github.mikybars.challenge.prices.application.ports.out.ProductPriceRepository;
 import com.github.mikybars.challenge.prices.domain.BrandId;
 import com.github.mikybars.challenge.prices.domain.ProductId;
 import com.github.mikybars.challenge.prices.domain.ProductPrice;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,45 +25,31 @@ class GetProductPriceUseCaseTest {
   GetProductPriceUseCase getProductPriceUseCase;
 
   @Mock
-  PriceRepository priceRepository;
+  ProductPriceRepository productPriceRepository;
 
   @BeforeEach
   void setUp() {
-    getProductPriceUseCase = new ProductPriceService(priceRepository);
+    getProductPriceUseCase = new ProductPriceService(productPriceRepository);
   }
 
   @Test
-  void returnTheOnlyResult() {
-    ProductPrice theOnlyResult = ProductPrices.any();
-    when(priceRepository.findAll(
+  void returnTheProductPrice() {
+    var expectedProductPrice = ProductPrices.any();
+    when(productPriceRepository.findTheHighestRankedBy(
         sometime(), someProduct(), someBrand())
-    ).thenReturn(List.of(theOnlyResult));
+    ).thenReturn(Optional.of(expectedProductPrice));
 
-    ProductPrice productPrice = getProductPriceUseCase.execute(sometime(), someProduct(),
-        someBrand());
+    ProductPrice productPrice =
+        getProductPriceUseCase.execute(sometime(), someProduct(), someBrand());
 
-    assertThat(productPrice).isEqualTo(theOnlyResult);
-  }
-
-  @Test
-  void returnTheHighestRanked() {
-    ProductPrice theLowestRanked = ProductPrices.withPriority(1);
-    ProductPrice theHighestRanked = ProductPrices.withPriority(2);
-    when(priceRepository.findAll(
-        sometime(), someProduct(), someBrand())
-    ).thenReturn(List.of(theLowestRanked, theHighestRanked));
-
-    ProductPrice productPrice = getProductPriceUseCase.execute(sometime(), someProduct(),
-        someBrand());
-
-    assertThat(productPrice).isEqualTo(theHighestRanked);
+    assertThat(productPrice).isEqualTo(expectedProductPrice);
   }
 
   @Test
   void throwWhenNoResults() {
-    when(priceRepository.findAll(
+    when(productPriceRepository.findTheHighestRankedBy(
         sometime(), someProduct(), someBrand())
-    ).thenReturn(emptyList());
+    ).thenReturn(Optional.empty());
 
     assertThatThrownBy(
         () -> getProductPriceUseCase.execute(sometime(), someProduct(), someBrand())
