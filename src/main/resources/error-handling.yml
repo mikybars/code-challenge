@@ -4,9 +4,6 @@ error.handling:
     400: DEBUG
     404: INFO
     5xx: ERROR
-  json-field-names:
-    code: title
-    message: detail
   http-statuses:
     com.github.mikybars.challenge:
       common.NotFoundException: not_found

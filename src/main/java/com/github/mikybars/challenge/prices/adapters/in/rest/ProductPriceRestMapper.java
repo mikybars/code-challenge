@@ -1,4 +1,4 @@
-package com.github.mikybars.challenge.prices.adapters.in.web;
+package com.github.mikybars.challenge.prices.adapters.in.rest;
 
 import com.github.mikybars.challenge.prices.domain.ProductPrice;
 import org.mapstruct.Mapper;
