@@ -20,7 +20,7 @@ import org.springframework.test.web.reactive.server.WebTestClient.ResponseSpec;
 
 @WebMvcTest
 @Import(ProductPriceRestMapperImpl.class)
-public class GetProductPriceRestTest {
+class GetProductPriceRestTest {
 
   @Autowired
   WebTestClient webClient;
