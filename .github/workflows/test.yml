@@ -22,9 +22,17 @@ jobs:
     - name: Build and test with Gradle
       run: ./gradlew test --parallel
       
-    - name: Publish Test Report
+    - name: Run coverage verification
+      run: ./gradlew jacocoTestCoverageVerification
+    
+    - name: Upload test & coverage reports
       uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: test-results
-        path: build/reports/tests/
+        name: test-and-coverage-reports
+        path: build/reports/
+
+    - name: Publish coverage report
+      uses: coverallsapp/github-action@v2
+      with:
+        file: build/reports/jacoco/test/jacocoTestReport.xml

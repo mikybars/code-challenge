@@ -3,6 +3,7 @@ plugins {
 	id("org.springframework.boot") version "3.4.4"
 	id("io.spring.dependency-management") version "1.1.7"
 	id("org.openapi.generator") version "7.12.0"
+	id("jacoco")
 }
 
 group = "com.github.mikybars"
@@ -69,4 +70,38 @@ tasks.withType<JavaCompile> {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+	finalizedBy(tasks.jacocoTestReport)
+}
+
+jacoco {
+	toolVersion = "0.8.11"
+}
+
+tasks.jacocoTestReport {
+	reports {
+		xml.required = true
+		html.required = true
+	}
+	classDirectories.setFrom(
+		files(classDirectories.files.map {
+			fileTree(it) {
+				exclude(
+					"**/adapters/in/rest/*Dto.class",
+					"**/adapters/in/rest/*Api.class",
+					"**/adapters/in/rest/ApiUtil.class",
+				)
+			}
+		})
+	)
+}
+
+tasks.jacocoTestCoverageVerification {
+	violationRules {
+		rule {
+			limit {
+				minimum = 0.7.toBigDecimal()
+			}
+		}
+	}
+	classDirectories.setFrom(tasks.jacocoTestReport.get().classDirectories)
 }
