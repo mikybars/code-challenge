@@ -1,3 +1,5 @@
+[![Build and Test](https://github.com/mikybars/code-challenge/actions/workflows/test.yml/badge.svg)](https://github.com/mikybars/code-challenge/actions/workflows/test.yml)
+
 # Servicio de precios
 
 ## Descripción
