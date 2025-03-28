@@ -6,18 +6,17 @@ import com.github.mikybars.challenge.prices.domain.ProductId;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-class ProductPricesController {
+class ProductPricesController implements PricesApi {
 
   private final GetProductPriceUseCase getProductPriceUseCase;
   private final ProductPriceRestMapper productPriceRestMapper;
 
-  @GetMapping("/prices")
-  ResponseEntity<ProductPriceDto> findPrice(LocalDateTime applicationDate, String productId, String brandId) {
+  @Override
+  public ResponseEntity<ProductPriceDto> getPrice(LocalDateTime applicationDate, String productId, String brandId) {
     var productPrice = getProductPriceUseCase.execute(
         applicationDate, new ProductId(productId), new BrandId(brandId));
     var responseDto = productPriceRestMapper.toResponseDto(productPrice);

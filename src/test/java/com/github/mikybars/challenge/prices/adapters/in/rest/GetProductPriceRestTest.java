@@ -72,6 +72,23 @@ class GetProductPriceRestTest {
             JsonApprovals.verifyJson(result.getResponseBody()));
   }
 
+  @Test
+  void validationErrorsMeetStandards() {
+    ResponseSpec response = webClient.get()
+        .uri(uriBuilder -> uriBuilder
+            .path("/prices")
+            // .queryParam("applicationDate", "is missing")
+            .build())
+        .accept(MediaType.APPLICATION_JSON)
+        .exchange();
+
+    response
+        .expectStatus().isBadRequest()
+        .expectBody()
+        .jsonPath("code").exists()
+        .jsonPath("message").exists();
+  }
+
   static LocalDateTime sometime() {
     return LocalDateTime.parse("2020-06-14T00:00:00");
   }
