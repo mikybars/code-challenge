@@ -1,10 +1,8 @@
 package com.github.mikybars.challenge.prices.adapters.out.persistence;
 
+import com.github.mikybars.challenge.prices.application.ProductPriceSearchCriteria;
 import com.github.mikybars.challenge.prices.application.ports.out.ProductPriceRepository;
-import com.github.mikybars.challenge.prices.domain.BrandId;
-import com.github.mikybars.challenge.prices.domain.ProductId;
 import com.github.mikybars.challenge.prices.domain.ProductPrice;
-import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -19,10 +17,9 @@ class InMemoryProductPriceRepository implements ProductPriceRepository {
   private final ProductPricePersistenceMapper persistenceMapper;
 
   @Override
-  public Optional<ProductPrice> findTheHighestRankedBy(
-      LocalDateTime applicationDate, ProductId productId, BrandId brandId) {
+  public Optional<ProductPrice> findTheHighestRankedBy(ProductPriceSearchCriteria searchCriteria) {
     return jpaRepository
-        .findTheHighestRankedBy(applicationDate, productId.id(), brandId.id())
+        .findTheHighestRankedBy(searchCriteria)
         .map(persistenceMapper::toDomain);
   }
 
@@ -31,15 +28,14 @@ class InMemoryProductPriceRepository implements ProductPriceRepository {
 
     @Query(value = """
         SELECT * FROM product_price
-        WHERE product_id = :productId
-          AND brand_id = :brandId
-          AND start_date <= :applicationDate
-          AND end_date >= :applicationDate
+        WHERE product_id = :#{#criteria.productId.id}
+          AND brand_id = :#{#criteria.brandId.id}
+          AND start_date <= :#{#criteria.applicationDate}
+          AND end_date >= :#{#criteria.applicationDate}
         ORDER BY rank DESC
         LIMIT 1
         """,
         nativeQuery = true)
-    Optional<ProductPriceEntity> findTheHighestRankedBy(
-        LocalDateTime applicationDate, String productId, String brandId);
+    Optional<ProductPriceEntity> findTheHighestRankedBy(ProductPriceSearchCriteria criteria);
   }
 }

@@ -1,6 +1,10 @@
 package com.github.mikybars.challenge.prices.adapters.in.rest;
 
+import com.github.mikybars.challenge.prices.application.ProductPriceSearchCriteria;
+import com.github.mikybars.challenge.prices.domain.BrandId;
+import com.github.mikybars.challenge.prices.domain.ProductId;
 import com.github.mikybars.challenge.prices.domain.ProductPrice;
+import java.time.LocalDateTime;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -13,4 +17,11 @@ interface ProductPriceRestMapper {
   @Mapping(target = "amount", source = "price.amount")
   @Mapping(target = "currencyCode", source = "price.currency")
   ProductPriceDto toResponseDto(ProductPrice productPrice);
+
+  ProductPriceSearchCriteria toSearchCriteria(
+      LocalDateTime applicationDate, String productId, String brandId);
+
+  ProductId toProductId(String id);
+
+  BrandId toBrandId(String id);
 }

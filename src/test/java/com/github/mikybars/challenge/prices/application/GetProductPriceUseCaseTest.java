@@ -36,11 +36,12 @@ class GetProductPriceUseCaseTest {
   void returnTheProductPrice() {
     var expectedProductPrice = ProductPrices.any();
     when(productPriceRepository.findTheHighestRankedBy(
-        sometime(), someProduct(), someBrand())
+        new ProductPriceSearchCriteria(sometime(), someProduct(), someBrand()))
     ).thenReturn(Optional.of(expectedProductPrice));
 
     ProductPrice productPrice =
-        getProductPriceUseCase.execute(sometime(), someProduct(), someBrand());
+        getProductPriceUseCase.execute(
+            new ProductPriceSearchCriteria(sometime(), someProduct(), someBrand()));
 
     assertThat(productPrice).isEqualTo(expectedProductPrice);
   }
@@ -48,11 +49,12 @@ class GetProductPriceUseCaseTest {
   @Test
   void throwWhenNoResults() {
     when(productPriceRepository.findTheHighestRankedBy(
-        sometime(), someProduct(), someBrand())
+        new ProductPriceSearchCriteria(sometime(), someProduct(), someBrand()))
     ).thenReturn(Optional.empty());
 
     assertThatThrownBy(
-        () -> getProductPriceUseCase.execute(sometime(), someProduct(), someBrand())
+        () -> getProductPriceUseCase.execute(
+            new ProductPriceSearchCriteria(sometime(), someProduct(), someBrand()))
     )
         .isInstanceOf(NotFoundException.class)
         .hasMessageContainingAll(sometime().toString(), someProduct().id(), someBrand().id());

@@ -3,6 +3,7 @@ package com.github.mikybars.challenge.prices.adapters.out.persistence;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.github.mikybars.challenge.JpaConfiguration;
+import com.github.mikybars.challenge.prices.application.ProductPriceSearchCriteria;
 import com.github.mikybars.challenge.prices.domain.BrandId;
 import com.github.mikybars.challenge.prices.domain.ProductId;
 import com.github.mikybars.challenge.prices.domain.ProductPrice;
@@ -38,8 +39,8 @@ class InMemoryProductPriceRepositoryTest {
   @Test
   void returnEmptyWhenDateIsBefore() {
     Optional<ProductPrice> productPrice = productPriceRepository.findTheHighestRankedBy(
-        onlyPriceStartDate.minusSeconds(1), productWithOnePrice, brandWithOnePrice
-    );
+        new ProductPriceSearchCriteria(onlyPriceStartDate.minusSeconds(1), productWithOnePrice,
+            brandWithOnePrice));
 
     assertThat(productPrice).isEmpty();
   }
@@ -47,8 +48,7 @@ class InMemoryProductPriceRepositoryTest {
   @Test
   void returnOneWhenDateEqualsStart() {
     Optional<ProductPrice> productPrice = productPriceRepository.findTheHighestRankedBy(
-        onlyPriceStartDate, productWithOnePrice, brandWithOnePrice
-    );
+        new ProductPriceSearchCriteria(onlyPriceStartDate, productWithOnePrice, brandWithOnePrice));
 
     assertThat(productPrice).get()
         .satisfies(JsonApprovals::verifyAsJson);
@@ -57,8 +57,8 @@ class InMemoryProductPriceRepositoryTest {
   @Test
   void returnOneWhenDateIsInBetween() {
     Optional<ProductPrice> productPrice = productPriceRepository.findTheHighestRankedBy(
-        onlyPriceStartDate.plusSeconds(1), productWithOnePrice, brandWithOnePrice
-    );
+        new ProductPriceSearchCriteria(onlyPriceStartDate.plusSeconds(1), productWithOnePrice,
+            brandWithOnePrice));
 
     assertThat(productPrice).get()
         .extracting(ProductPrice::productId, ProductPrice::brandId)
@@ -68,8 +68,7 @@ class InMemoryProductPriceRepositoryTest {
   @Test
   void returnOneWhenDateEqualsEnd() {
     Optional<ProductPrice> productPrice = productPriceRepository.findTheHighestRankedBy(
-        onlyPriceEndDate, productWithOnePrice, brandWithOnePrice
-    );
+        new ProductPriceSearchCriteria(onlyPriceEndDate, productWithOnePrice, brandWithOnePrice));
 
     assertThat(productPrice).get()
         .extracting(ProductPrice::productId, ProductPrice::brandId)
@@ -79,8 +78,8 @@ class InMemoryProductPriceRepositoryTest {
   @Test
   void returnEmptyWhenDateIsAfter() {
     Optional<ProductPrice> productPrice = productPriceRepository.findTheHighestRankedBy(
-        onlyPriceEndDate.plusSeconds(1), productWithOnePrice, brandWithOnePrice
-    );
+        new ProductPriceSearchCriteria(onlyPriceEndDate.plusSeconds(1), productWithOnePrice,
+            brandWithOnePrice));
 
     assertThat(productPrice).isEmpty();
   }
@@ -90,8 +89,8 @@ class InMemoryProductPriceRepositoryTest {
     ProductId productWithMultiplePrices = new ProductId("p2");
     BrandId brandWithMultiplePrices = new BrandId("b1");
     Optional<ProductPrice> productPrice = productPriceRepository.findTheHighestRankedBy(
-        highestRankedStartDate, productWithMultiplePrices, brandWithMultiplePrices
-    );
+        new ProductPriceSearchCriteria(highestRankedStartDate, productWithMultiplePrices,
+            brandWithMultiplePrices));
 
     assertThat(productPrice).get()
         .extracting(ProductPrice::productId, ProductPrice::brandId, ProductPrice::startDate)
