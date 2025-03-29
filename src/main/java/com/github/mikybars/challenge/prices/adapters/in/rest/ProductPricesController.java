@@ -15,10 +15,9 @@ class ProductPricesController implements PricesApi {
   private final ProductPriceRestMapper productPriceRestMapper;
 
   @Override
-  public ResponseEntity<ProductPriceDto> getPrice(LocalDateTime applicationDate, String productId,
-      String brandId) {
-    ProductPriceSearchCriteria searchCriteria = productPriceRestMapper.toSearchCriteria(
-        applicationDate, productId, brandId);
+  public ResponseEntity<ProductPriceDto> getPrice(LocalDateTime applicationDate, String productId) {
+    ProductPriceSearchCriteria searchCriteria =
+        productPriceRestMapper.toSearchCriteria(productId, applicationDate);
     var productPrice = getProductPriceUseCase.execute(searchCriteria);
     var responseDto = productPriceRestMapper.toResponseDto(productPrice);
     return ResponseEntity.ok(responseDto);

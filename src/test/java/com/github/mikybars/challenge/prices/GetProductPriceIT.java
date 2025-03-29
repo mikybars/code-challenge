@@ -24,7 +24,6 @@ class GetProductPriceIT {
             .path("/prices")
             .queryParam("applicationDate", LocalDateTime.parse("2020-06-14T00:00:00"))
             .queryParam("productId", 35455)
-            .queryParam("brandId", "b1")
             .build())
         .accept(MediaType.APPLICATION_JSON)
         .exchange();

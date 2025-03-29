@@ -6,7 +6,6 @@ import com.github.mikybars.challenge.common.NotFoundException;
 import com.github.mikybars.challenge.prices.ProductPrices;
 import com.github.mikybars.challenge.prices.application.ProductPriceSearchCriteria;
 import com.github.mikybars.challenge.prices.application.ports.in.GetProductPriceUseCase;
-import com.github.mikybars.challenge.prices.domain.BrandId;
 import com.github.mikybars.challenge.prices.domain.ProductId;
 import java.time.LocalDateTime;
 import org.approvaltests.JsonApprovals;
@@ -32,7 +31,7 @@ class GetProductPriceRestTest {
   @Test
   void getProductPrice() {
     when(getProductPriceUseCase.execute(
-        new ProductPriceSearchCriteria(sometime(), ProductPrices.any().productId(), someBrand()))
+        new ProductPriceSearchCriteria(sometime(), ProductPrices.any().productId()))
     ).thenReturn(ProductPrices.any());
 
     ResponseSpec response = webClient.get()
@@ -40,7 +39,6 @@ class GetProductPriceRestTest {
             .path("/prices")
             .queryParam("applicationDate", sometime().toString())
             .queryParam("productId", ProductPrices.any().productId().id())
-            .queryParam("brandId", someBrand().id())
             .build())
         .accept(MediaType.APPLICATION_JSON)
         .exchange();
@@ -54,7 +52,7 @@ class GetProductPriceRestTest {
   @Test
   void doesNotGetProductPrice() {
     when(getProductPriceUseCase.execute(
-        new ProductPriceSearchCriteria(sometime(), productNotFoundId(), someBrand()))
+        new ProductPriceSearchCriteria(sometime(), productNotFoundId()))
     ).thenThrow(new NotFoundException("no price found for input params"));
 
     ResponseSpec response = webClient.get()
@@ -62,7 +60,6 @@ class GetProductPriceRestTest {
             .path("/prices")
             .queryParam("applicationDate", sometime().toString())
             .queryParam("productId", productNotFoundId().id())
-            .queryParam("brandId", someBrand().id())
             .build())
         .accept(MediaType.APPLICATION_JSON)
         .exchange();
@@ -92,10 +89,6 @@ class GetProductPriceRestTest {
 
   static LocalDateTime sometime() {
     return LocalDateTime.parse("2020-06-14T00:00:00");
-  }
-
-  static BrandId someBrand() {
-    return new BrandId("1");
   }
 
   static ProductId productNotFoundId() {
