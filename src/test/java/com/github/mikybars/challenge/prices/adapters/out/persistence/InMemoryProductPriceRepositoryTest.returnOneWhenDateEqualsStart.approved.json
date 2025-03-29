@@ -1,17 +1,17 @@
 {
   "productId": {
-    "id": "p1"
+    "id": "35455"
   },
   "brandId": {
-    "id": "b1"
+    "id": "1"
   },
   "priceListId": {
-    "id": "pl1"
+    "id": "1"
   },
-  "startDate": "2023-01-01T00:00",
-  "endDate": "2023-12-31T23:59:59",
+  "startDate": "2020-06-14T00:00",
+  "endDate": "2020-12-31T23:59:59",
   "price": {
-    "amount": 100.00,
-    "currency": "USD"
+    "amount": 35.50,
+    "currency": "EUR"
   }
 }

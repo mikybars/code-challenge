@@ -4,7 +4,6 @@ import com.github.mikybars.challenge.prices.application.ProductPriceSearchCriter
 import com.github.mikybars.challenge.prices.application.ports.out.ProductPriceRepository;
 import com.github.mikybars.challenge.prices.domain.ProductPrice;
 import java.util.Optional;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -24,12 +23,11 @@ class InMemoryProductPriceRepository implements ProductPriceRepository {
   }
 
   interface JpaRepository extends
-      org.springframework.data.jpa.repository.JpaRepository<ProductPriceEntity, UUID> {
+      org.springframework.data.jpa.repository.JpaRepository<ProductPriceEntity, Long> {
 
     @Query(value = """
         SELECT * FROM product_price
         WHERE product_id = :#{#criteria.productId.id}
-          AND brand_id = :#{#criteria.brandId.id}
           AND start_date <= :#{#criteria.applicationDate}
           AND end_date >= :#{#criteria.applicationDate}
         ORDER BY rank DESC

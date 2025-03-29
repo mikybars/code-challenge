@@ -10,6 +10,8 @@ import org.mapstruct.Mapping;
 @Mapper
 interface ProductPricePersistenceMapper {
 
+  @Mapping(target = "productId", source = "product.id")
+  @Mapping(target = "brandId", source = "product.brand.id")
   @Mapping(target = "price", source = "entity")
   ProductPrice toDomain(ProductPriceEntity entity);
 

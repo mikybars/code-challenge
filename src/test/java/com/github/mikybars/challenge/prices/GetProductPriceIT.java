@@ -7,7 +7,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.test.web.reactive.server.WebTestClient.ResponseSpec;
 
@@ -19,13 +18,12 @@ class GetProductPriceIT {
   WebTestClient webClient;
 
   @Test
-  @Sql("classpath:prices.sql")
   void getProductPrice() {
     ResponseSpec response = webClient.get()
         .uri(uriBuilder -> uriBuilder
             .path("/prices")
-            .queryParam("applicationDate", LocalDateTime.parse("2023-01-01T00:00:00"))
-            .queryParam("productId", "p1")
+            .queryParam("applicationDate", LocalDateTime.parse("2020-06-14T00:00:00"))
+            .queryParam("productId", 35455)
             .queryParam("brandId", "b1")
             .build())
         .accept(MediaType.APPLICATION_JSON)

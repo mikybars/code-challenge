@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
 
 @DataJpaTest
 @ActiveProfiles("standalone")
@@ -24,14 +23,13 @@ import org.springframework.test.context.jdbc.Sql;
     InMemoryProductPriceRepository.class,
     ProductPricePersistenceMapperImpl.class
 })
-@Sql("classpath:prices.sql")
 class InMemoryProductPriceRepositoryTest {
 
-  static final LocalDateTime onlyPriceStartDate = LocalDateTime.parse("2023-01-01T00:00:00");
-  static final LocalDateTime onlyPriceEndDate = LocalDateTime.parse("2023-12-31T23:59:59");
-  static final LocalDateTime highestRankedStartDate = LocalDateTime.parse("2023-11-20T00:00:00");
-  static final ProductId productWithOnePrice = new ProductId("p1");
-  static final BrandId brandWithOnePrice = new BrandId("b1");
+  static final LocalDateTime onlyPriceStartDate = LocalDateTime.parse("2020-06-14T00:00:00");
+  static final LocalDateTime onlyPriceEndDate = LocalDateTime.parse("2020-12-31T23:59:59");
+  static final LocalDateTime highestRankedStartDate = LocalDateTime.parse("2020-06-14T15:00:00");
+  static final ProductId productWithOnePrice = new ProductId("35455");
+  static final BrandId brandWithOnePrice = new BrandId("1");
 
   @Autowired
   InMemoryProductPriceRepository productPriceRepository;
@@ -86,14 +84,13 @@ class InMemoryProductPriceRepositoryTest {
 
   @Test
   void returnHighestRanked() {
-    ProductId productWithMultiplePrices = new ProductId("p2");
-    BrandId brandWithMultiplePrices = new BrandId("b1");
+    BrandId brandWithMultiplePrices = new BrandId("1");
     Optional<ProductPrice> productPrice = productPriceRepository.findTheHighestRankedBy(
-        new ProductPriceSearchCriteria(highestRankedStartDate, productWithMultiplePrices,
+        new ProductPriceSearchCriteria(highestRankedStartDate, productWithOnePrice,
             brandWithMultiplePrices));
 
     assertThat(productPrice).get()
         .extracting(ProductPrice::productId, ProductPrice::brandId, ProductPrice::startDate)
-        .containsExactly(productWithMultiplePrices, brandWithMultiplePrices, highestRankedStartDate);
+        .containsExactly(productWithOnePrice, brandWithMultiplePrices, highestRankedStartDate);
   }
 }
